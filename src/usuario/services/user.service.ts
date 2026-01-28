@@ -35,10 +35,7 @@ export class UsuarioService {
   async createUser(usuario: Usuario): Promise<Usuario> {
     const usuarioExistente = await this.findByUser(usuario.usuario);
     if (usuarioExistente) {
-      throw new HttpException(
-        'Username already exists',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new HttpException('Usuário já existente.', HttpStatus.BAD_REQUEST);
     }
     usuario.senha = await this.bcrypt.encodePass(usuario.senha);
     return this.usuarioRepository.save(usuario);
@@ -48,7 +45,7 @@ export class UsuarioService {
     await this.findById(usuario.id);
     const usuarioExistente = await this.findByUser(usuario.usuario);
     if (usuarioExistente && usuarioExistente.id !== usuario.id) {
-      throw new HttpException('Email já existente!', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Usuário já existente!', HttpStatus.BAD_REQUEST);
     }
     usuario.senha = await this.bcrypt.encodePass(usuario.senha);
     return this.usuarioRepository.save(usuario);

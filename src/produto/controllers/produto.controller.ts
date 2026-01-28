@@ -1,12 +1,22 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put } from "@nestjs/common";
-import { Produto } from "../entities/produto.entity";
-import { ProdutoService } from "../services/produto.service";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+} from '@nestjs/common';
+import { Produto } from '../entities/produto.entity';
+import { ProdutoService } from '../services/produto.service';
 
-@Controller("/postagens")
+@Controller('/produtos')
 export class ProdutoController {
   constructor(private readonly produtoService: ProdutoService) {}
 
- 
   @Get()
   @HttpCode(HttpStatus.OK)
   getAllProducts(): Promise<Produto[]> {
@@ -17,10 +27,9 @@ export class ProdutoController {
   @HttpCode(HttpStatus.OK)
   getProductById(@Param('id', ParseIntPipe) id: number): Promise<Produto> {
     return this.produtoService.getProductById(id);
-
   }
 
-@Post()
+  @Post()
   @HttpCode(HttpStatus.CREATED)
   createProduct(@Body() produto: Produto): Promise<Produto> {
     return this.produtoService.createProduct(produto);

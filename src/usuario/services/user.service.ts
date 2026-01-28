@@ -50,4 +50,12 @@ export class UsuarioService {
     usuario.senha = await this.bcrypt.encodePass(usuario.senha);
     return this.usuarioRepository.save(usuario);
   }
+
+  async delete(id: number): Promise<void> {
+    const usuarioExistente = await this.findById(id);
+    if (!usuarioExistente) {
+      throw new HttpException('Usuário não existente!', HttpStatus.NOT_FOUND);
+    }
+    await this.usuarioRepository.delete(id);
+  }
 }

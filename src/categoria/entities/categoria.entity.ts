@@ -1,11 +1,10 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { ApiProperty } from '@nestjs/swagger';
-import { Produto } from '../../produtos/entities/produto.entity';
+import { Produto } from '../../produto/entities/produto.entity';
 
 @Entity({ name: 'tb_categorias' })
 export class Categoria {
-
   @PrimaryGeneratedColumn()
   @ApiProperty()
   id: number;

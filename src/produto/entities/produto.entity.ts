@@ -1,17 +1,11 @@
-import { IsNotEmpty, IsNumber } from 'class-validator';
-import {
-  Column,
-  Entity,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { Categoria } from '../../categorias/entities/categoria.entity';
-import { Usuario } from '../../usuario/entities/usuario.entity';
+import { IsNotEmpty } from 'class-validator';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Categoria } from '../../categoria/entities/categoria.entity';
+import { Usuario } from '../../usuario/entities/user.entity';
 
 @Entity({ name: 'tb_produtos' })
 export class Produto {
-
   @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;

@@ -15,7 +15,7 @@ export class DevService implements TypeOrmOptionsFactory {
       password: '',
       database: 'db_foodDelivery',
       entities: [Produto, Categoria, Usuario],
-      synchronize: true,
+      synchronize: false,
       ssl: false,
     };
   }

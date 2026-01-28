@@ -20,7 +20,7 @@ export class CategoriasController {
   @Get()
   @HttpCode(HttpStatus.OK)
   getAllCategories(): Promise<Categoria[]> {
-    return this.categoriaService.getAllcategories();
+    return this.categoriaService.getAllCategories();
   }
 
   @Get('/:id')

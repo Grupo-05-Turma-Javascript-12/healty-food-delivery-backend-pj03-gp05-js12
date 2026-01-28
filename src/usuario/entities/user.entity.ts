@@ -37,7 +37,11 @@ export class Usuario {
   @ApiProperty()
   foto: string;
 
-  @CreateDateColumn({ name: 'data_cadastro', type: 'date' })
+  @CreateDateColumn({
+    name: 'data_cadastro',
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
   @ApiProperty()
   dataCadastro: Date;
 

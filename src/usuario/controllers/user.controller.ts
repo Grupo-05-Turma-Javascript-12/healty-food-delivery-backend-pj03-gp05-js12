@@ -12,7 +12,7 @@ import { Usuario } from '../entities/user.entity';
 import { UsuarioService } from '../services/user.service';
 
 @Controller('/usuarios')
-export class UserController {
+export class UsuarioController {
   constructor(private readonly usuarioService: UsuarioService) {}
 
   @Get()

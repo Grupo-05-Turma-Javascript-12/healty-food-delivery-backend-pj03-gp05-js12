@@ -30,11 +30,26 @@ export class ProdutoService {
     }
     return produto;
   }
-
-  async getProductByPrice(preco: number): Promise<Produto[]> {
+ async getProductByPrice(preco: number): Promise<Produto[]> {
     return await this.produtoRepository.find({
       where: { preco: LessThanOrEqual(preco) }
+    })
+  }
+
+  async getProductByStockStatus(): Promise<Produto[]> {
+    const produtos = await this.produtoRepository.find({
+      where: { em_estoque: true },
+      relations: {
+        categoria: true,
+      },
     });
+    if (!produtos)
+      throw new HttpException(
+        'Nenhum produto com estoque.',
+        HttpStatus.NOT_FOUND,
+      );
+
+    return produtos;
   }
 
   async createProduct(produto: Produto): Promise<Produto> {

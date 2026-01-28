@@ -31,6 +31,22 @@ export class ProdutoService {
     return produto;
   }
 
+  async getProductByStockStatus(): Promise<Produto[]> {
+    const produtos = await this.produtoRepository.find({
+      where: { em_estoque: true },
+      relations: {
+        categoria: true,
+      },
+    });
+    if (!produtos)
+      throw new HttpException(
+        'Nenhum produto com estoque.',
+        HttpStatus.NOT_FOUND,
+      );
+
+    return produtos;
+  }
+
   async createProduct(produto: Produto): Promise<Produto> {
     return this.produtoRepository.save(produto);
   }

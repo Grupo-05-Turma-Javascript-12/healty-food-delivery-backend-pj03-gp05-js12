@@ -11,10 +11,10 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { Produto } from '../entities/produto.entity';
-import { ProdutoService } from '../services/produto.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guard/jwt-auth.guard';
+import { Produto } from '../entities/produto.entity';
+import { ProdutoService } from '../services/produto.service';
 
 @ApiTags('Produto')
 @UseGuards(JwtAuthGuard)
@@ -33,6 +33,12 @@ export class ProdutoController {
   @HttpCode(HttpStatus.OK)
   getProductById(@Param('id', ParseIntPipe) id: number): Promise<Produto> {
     return this.produtoService.getProductById(id);
+  }
+
+  @Get('/ativos')
+  @HttpCode(HttpStatus.OK)
+  getProductByStockStatus(): Promise<Produto[]> {
+    return this.produtoService.getProductByStockStatus();
   }
 
   @Post()

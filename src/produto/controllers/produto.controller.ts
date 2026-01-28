@@ -29,10 +29,22 @@ export class ProdutoController {
     return this.produtoService.getAllProducts();
   }
 
+  @Get('/disponiveis')
+  @HttpCode(HttpStatus.OK)
+  getAvailableProducts(): Promise<Produto[]> {
+    return this.produtoService.getProductByStockStatus();
+  }
+
   @Get('/:id')
   @HttpCode(HttpStatus.OK)
   getProductById(@Param('id', ParseIntPipe) id: number): Promise<Produto> {
     return this.produtoService.getProductById(id);
+  }
+
+  @Get('/preco/:preco')
+  @HttpCode(HttpStatus.OK)
+  getProductByPrice(@Param('preco', ParseIntPipe) preco: number): Promise<Produto[]> {
+    return this.produtoService.getProductByPrice(preco);
   }
 
   @Post()

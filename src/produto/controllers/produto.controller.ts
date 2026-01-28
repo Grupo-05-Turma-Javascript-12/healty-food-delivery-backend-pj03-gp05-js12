@@ -1,16 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Param,
-  ParseIntPipe,
-  Post,
-  Put,
-  UseGuards,
-} from '@nestjs/common';
+import {  Body,  Controller,  Delete,  Get,  HttpCode,  HttpStatus,  Param,  ParseIntPipe,  Post,  Put,  UseGuards } from '@nestjs/common';
 import { Produto } from '../entities/produto.entity';
 import { ProdutoService } from '../services/produto.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -34,6 +22,12 @@ export class ProdutoController {
   getProductById(@Param('id', ParseIntPipe) id: number): Promise<Produto> {
     return this.produtoService.getProductById(id);
   }
+
+  @Get('/preco/:preco')
+  @HttpCode(HttpStatus.OK)
+  getProductByPrice(@Param('preco', ParseIntPipe) preco: number): Promise<Produto[]> {
+    return this.produtoService.getProductByPrice(preco);
+  } 
 
   @Post()
   @HttpCode(HttpStatus.CREATED)

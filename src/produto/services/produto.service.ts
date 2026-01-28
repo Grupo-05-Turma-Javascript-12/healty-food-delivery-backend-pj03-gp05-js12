@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { LessThan, LessThanOrEqual, Repository } from 'typeorm';
 import { Produto } from '../entities/produto.entity';
 
 @Injectable()
@@ -29,6 +29,12 @@ export class ProdutoService {
       throw new HttpException('Produto não encontrado!', HttpStatus.NOT_FOUND);
     }
     return produto;
+  }
+
+  async getProductByPrice(preco: number): Promise<Produto[]> {
+    return await this.produtoRepository.find({
+      where: { preco: LessThanOrEqual(preco) }
+    });
   }
 
   async createProduct(produto: Produto): Promise<Produto> {

@@ -30,6 +30,7 @@ export class ProdutoService {
     }
     return produto;
   }
+  
  async getProductByPrice(preco: number): Promise<Produto[]> {
     return await this.produtoRepository.find({
       where: { preco: LessThanOrEqual(preco) }

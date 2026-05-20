@@ -3,9 +3,6 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class Bcrypt {
-  hashPassword(senha: string) {
-    throw new Error('Method not implemented.');
-  }
   private readonly saltRounds = 10;
 
   async encodePass(senha: string): Promise<string> {

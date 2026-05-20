@@ -1,28 +1,38 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-//import { AppService } from './app.service';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-//import { DevService } from './data/dev.service';
 import { UsuarioModule } from './usuario/usuario.module';
 import { CategoriaModule } from './categoria/categoria.module';
 import { AuthModule } from './auth/auth.module';
 import { ProdutoModule } from './produto/produto.module';
-import { ProdService } from './data/prod.service';
+import { Usuario } from './usuario/entities/user.entity';
+import { Categoria } from './categoria/entities/categoria.entity';
+import { Produto } from './produto/entities/produto.entity';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
-      useClass: ProdService,
-      imports: [ConfigModule]
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get<string>('DATABASE_HOST'),
+        port: configService.get<number>('DATABASE_PORT'),
+        username: configService.get<string>('DATABASE_USER'),
+        password: configService.get<string>('DATABASE_PASSWORD'),
+        database: configService.get<string>('DATABASE_NAME'),
+        entities: [Usuario, Categoria, Produto],
+        synchronize: true,
+        ssl:
+          process.env.NODE_ENV === 'production'
+            ? { rejectUnauthorized: false }
+            : false,
+      }),
+      inject: [ConfigService],
     }),
     UsuarioModule,
     CategoriaModule,
     ProdutoModule,
     AuthModule,
   ],
-  controllers: [AppController],
-  providers: [],
 })
 export class AppModule {}

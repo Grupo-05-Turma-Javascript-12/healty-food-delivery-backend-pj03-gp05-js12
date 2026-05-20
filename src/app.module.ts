@@ -8,6 +8,7 @@ import { ProdutoModule } from './produto/produto.module';
 import { Usuario } from './usuario/entities/user.entity';
 import { Categoria } from './categoria/entities/categoria.entity';
 import { Produto } from './produto/entities/produto.entity';
+import { HealthController } from './health/health.controller';
 
 @Module({
   imports: [
@@ -34,5 +35,6 @@ import { Produto } from './produto/entities/produto.entity';
     ProdutoModule,
     AuthModule,
   ],
+  controllers: [HealthController],
 })
 export class AppModule {}

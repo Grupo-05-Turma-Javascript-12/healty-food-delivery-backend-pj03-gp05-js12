@@ -1,0 +1,62 @@
+services:
+  api:
+    build:
+      context: .
+      target: production
+    container_name: healthyfood_api
+    restart: unless_stopped
+    ports:
+      - '4000:4000'
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_NAME: ${DATABASE_NAME}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN}
+      NODE_ENV: production
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - healthyfood_network
+  postgres:
+    image: postgres:16-alpine
+    container_name: healthyfood_postgres
+    restart: unless_stopped
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${DATABASE_USER}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - healthyfood_network
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: healthyfood_pgadmin
+    restart: unless_stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - '5051:80'
+    depends_on:
+      - postgres
+    networks:
+      - healthyfood_network
+
+volumes:
+  postgres_data:
+networks:
+  healthyfood_network:
+    driver: bridge
+  

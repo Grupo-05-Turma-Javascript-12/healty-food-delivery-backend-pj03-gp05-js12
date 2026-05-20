@@ -1,9 +1,9 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsuarioModule } from '../usuario/usuario.module';
 import { Bcrypt } from './bcrypt/bcrypt';
-import { jwtConstants } from './constants/constants';
 import { AuthController } from './controllers/auth.controller';
 import { AuthService } from './services/auth.service';
 import { JwtStrategy } from './strategy/jwt.strategy';
@@ -13,11 +13,15 @@ import { LocalStrategy } from './strategy/local.strategy';
   imports: [
     forwardRef(() => UsuarioModule),
     PassportModule,
-    JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: {
-        expiresIn: '1h',
-      },
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: {
+          expiresIn: configService.get<string>('JWT_EXPIRES_IN'),
+        },
+      }),
+      inject: [ConfigService],
     }),
   ],
   providers: [Bcrypt, AuthService, LocalStrategy, JwtStrategy],

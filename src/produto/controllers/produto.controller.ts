@@ -6,12 +6,14 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseFloatPipe,
   ParseIntPipe,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guard/jwt-auth.guard';
 import { Produto } from '../entities/produto.entity';
 import { ProdutoService } from '../services/produto.service';
@@ -25,7 +27,11 @@ export class ProdutoController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  getAllProducts(): Promise<Produto[]> {
+  @ApiQuery({ name: 'preco', required: false, type: Number })
+  getAllProducts(@Query('preco') preco?: number): Promise<Produto[]> {
+    if (preco) {
+      return this.produtoService.getProductByPrice(Number(preco));
+    }
     return this.produtoService.getAllProducts();
   }
 
@@ -39,12 +45,6 @@ export class ProdutoController {
   @HttpCode(HttpStatus.OK)
   getProductById(@Param('id', ParseIntPipe) id: number): Promise<Produto> {
     return this.produtoService.getProductById(id);
-  }
-
-  @Get('/preco/:preco')
-  @HttpCode(HttpStatus.OK)
-  getProductByPrice(@Param('preco', ParseIntPipe) preco: number): Promise<Produto[]> {
-    return this.produtoService.getProductByPrice(preco);
   }
 
   @Post()

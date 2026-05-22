@@ -1,3 +1,6 @@
+import './tracer';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -15,6 +18,10 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  const logger = app.get(WINSTON_MODULE_NEST_PROVIDER);
+  app.useLogger(logger);
+  app.useGlobalInterceptors(new LoggingInterceptor(app.get('winston')));
 
   app.enableCors();
 
@@ -36,6 +43,7 @@ async function bootstrap() {
   await app.listen(process.env.PORT ?? 4000);
   console.log(`API:     http://localhost:${process.env.PORT ?? 4000}`);
   console.log(`Swagger: http://localhost:${process.env.PORT ?? 4000}/swagger`);
+  console.log(`Health:  http://localhost:${process.env.PORT ?? 4000}/health`);
 }
 
 bootstrap();

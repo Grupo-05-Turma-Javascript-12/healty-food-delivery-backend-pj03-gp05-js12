@@ -9,6 +9,7 @@ import { Usuario } from './usuario/entities/user.entity';
 import { Categoria } from './categoria/entities/categoria.entity';
 import { Produto } from './produto/entities/produto.entity';
 import { HealthController } from './health/health.controller';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { HealthController } from './health/health.controller';
       }),
       inject: [ConfigService],
     }),
+    LoggerModule,
     UsuarioModule,
     CategoriaModule,
     ProdutoModule,

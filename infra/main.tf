@@ -257,6 +257,37 @@ resource "aws_iam_role_policy_attachment" "ecs_execution" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
+resource "aws_iam_role_policy" "ecs_ssm_access" {
+  name = "${var.project_name}-ecs-ssm-access"
+  role = aws_iam_role.ecs_task_execution.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ssm:GetParameter",
+          "ssm:GetParameters",
+          "ssm:GetParametersByPath"
+        ]
+        Resource = [
+          aws_ssm_parameter.db_password.arn,
+          aws_ssm_parameter.jwt_secret.arn,
+          aws_ssm_parameter.datadog_api_key.arn
+        ]
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "kms:Decrypt"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
 resource "aws_iam_role" "ecs_task" {
   name = "${var.project_name}-ecs-task-role"
 
@@ -326,16 +357,16 @@ resource "aws_ecs_task_definition" "api" {
       }]
 
       environment = [
-        { name = "NODE_ENV",       value = "production" },
-        { name = "PORT",           value = tostring(var.app_port) },
-        { name = "DATABASE_HOST",  value = aws_db_instance.postgres.address },
-        { name = "DATABASE_PORT",  value = "5432" },
-        { name = "DATABASE_USER",  value = var.db_username },
-        { name = "DATABASE_NAME",  value = var.db_name },
+        { name = "NODE_ENV", value = "production" },
+        { name = "PORT", value = tostring(var.app_port) },
+        { name = "DATABASE_HOST", value = aws_db_instance.postgres.address },
+        { name = "DATABASE_PORT", value = "5432" },
+        { name = "DATABASE_USER", value = var.db_username },
+        { name = "DATABASE_NAME", value = var.db_name },
         { name = "JWT_EXPIRES_IN", value = "1h" },
-        { name = "DD_SERVICE",     value = "${var.project_name}-api" },
-        { name = "DD_ENV",         value = var.environment },
-        { name = "DD_VERSION",     value = "1.0.0" }
+        { name = "DD_SERVICE", value = "${var.project_name}-api" },
+        { name = "DD_ENV", value = var.environment },
+        { name = "DD_VERSION", value = "1.0.0" }
       ]
 
       secrets = [
@@ -370,13 +401,13 @@ resource "aws_ecs_task_definition" "api" {
       essential = false
 
       environment = [
-        { name = "DD_SITE",                    value = "datadoghq.com" },
-        { name = "ECS_FARGATE",                value = "true" },
-        { name = "DD_APM_ENABLED",             value = "true" },
-        { name = "DD_APM_NON_LOCAL_TRAFFIC",   value = "true" },
-        { name = "DD_LOGS_ENABLED",            value = "true" },
+        { name = "DD_SITE", value = "datadoghq.com" },
+        { name = "ECS_FARGATE", value = "true" },
+        { name = "DD_APM_ENABLED", value = "true" },
+        { name = "DD_APM_NON_LOCAL_TRAFFIC", value = "true" },
+        { name = "DD_LOGS_ENABLED", value = "true" },
         { name = "DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL", value = "true" },
-        { name = "DD_CONTAINER_EXCLUDE_LOGS",  value = "name:datadog-agent" }
+        { name = "DD_CONTAINER_EXCLUDE_LOGS", value = "name:datadog-agent" }
       ]
 
       secrets = [
@@ -446,7 +477,9 @@ resource "aws_ecs_service" "api" {
   depends_on = [
     aws_lb_listener.http,
     aws_iam_role_policy_attachment.ecs_execution,
+    aws_iam_role_policy.ecs_ssm_access,
   ]
 
   tags = { Environment = var.environment }
 }
+

@@ -9,6 +9,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.getHttpAdapter().getInstance().set('trust proxy', 1);
 
   app.use(
     helmet({
@@ -46,7 +47,12 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('/swagger', app, document);
+  SwaggerModule.setup('/swagger', app, document, {
+    swaggerOptions: {
+      persistAuthorization: true,
+    },
+    customSiteTitle: 'Healthy Food API Docs',
+  });
 
   await app.listen(process.env.PORT ?? 4000);
   console.log(`API:     http://localhost:${process.env.PORT ?? 4000}`);

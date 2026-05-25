@@ -8,6 +8,7 @@ import { AuthController } from './controllers/auth.controller';
 import { AuthService } from './services/auth.service';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { LocalStrategy } from './strategy/local.strategy';
+import { type StringValue } from 'ms';
 
 @Module({
   imports: [
@@ -16,9 +17,11 @@ import { LocalStrategy } from './strategy/local.strategy';
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET'),
+        secret: configService.getOrThrow<string>('JWT_SECRET'),
         signOptions: {
-          expiresIn: configService.get<string>('JWT_EXPIRES_IN'),
+          expiresIn: configService.getOrThrow<StringValue>(
+            'JWT_EXPIRES_IN',
+          ),
         },
       }),
       inject: [ConfigService],

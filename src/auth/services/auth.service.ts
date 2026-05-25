@@ -22,7 +22,7 @@ export class AuthService {
     const matchPassword = await this.bcrypt.comparePass(senha, user.senha);
 
     if (user && matchPassword) {
-      const { senha, ...result } = user;
+      const { senha: __ignored, ...result } = user;
       return result;
     }
 

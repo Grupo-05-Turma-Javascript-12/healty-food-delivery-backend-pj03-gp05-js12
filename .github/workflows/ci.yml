@@ -90,19 +90,28 @@ jobs:
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        shell: bash
         run: |
-          IMAGE_URI=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          IMAGE_URI="${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}"
 
           docker build \
             --target production \
-            -t $IMAGE_URI \
-            -t $ECR_REGISTRY/$ECR_REPOSITORY:latest \
+            -t "${IMAGE_URI}" \
+            -t "${ECR_REGISTRY}/${ECR_REPOSITORY}:latest" \
             .
 
-          docker push $IMAGE_URI
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker push "${IMAGE_URI}"
+          docker push "${ECR_REGISTRY}/${ECR_REPOSITORY}:latest"
 
-          echo "image=$IMAGE_URI" >> $GITHUB_OUTPUT
+          {
+            echo "image=${IMAGE_URI}"
+          } >> "$GITHUB_OUTPUT"
+
+          echo "Generated image output:"
+          cat "$GITHUB_OUTPUT"
+          
+      - name: Debug image output
+        run: echo "${{ steps.build-image.outputs.image }}"
 
   deploy:
     name: Deploy to ECS Fargate

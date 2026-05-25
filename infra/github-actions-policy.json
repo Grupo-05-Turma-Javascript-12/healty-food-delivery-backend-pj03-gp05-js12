@@ -32,6 +32,12 @@
         "iam:PassRole"
       ],
       "Resource": "*"
+    },
+    {
+      "Sid": "ELBRead",
+      "Effect": "Allow",
+      "Action": ["elasticloadbalancing:DescribeLoadBalancers"],
+      "Resource": "*"
     }
   ]
 }

@@ -109,7 +109,7 @@ jobs:
 
           echo "Generated image output:"
           cat "$GITHUB_OUTPUT"
-          
+
       - name: Debug image output
         run: echo "${{ steps.build-image.outputs.image }}"
 
@@ -129,6 +129,15 @@ jobs:
           aws-access-key-id:     ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region:            ${{ env.AWS_REGION }}
+      
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Define image URI
+        id: image
+        run: |
+          echo "image=${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}" >> $GITHUB_OUTPUT
 
       - name: Download task definition
         run: |
@@ -143,7 +152,7 @@ jobs:
         with:
           task-definition: task-definition.json
           container-name:  healthyfood-api
-          image:           ${{ needs.build.outputs.image }}
+          image:           ${{ steps.image.outputs.image }}
 
       - name: Deploy to ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1

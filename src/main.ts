@@ -19,7 +19,7 @@ async function bootstrap() {
     }),
   );
 
-  const logger = app.get(WINSTON_MODULE_NEST_PROVIDER);
+  const logger = app.get<typeof console>(WINSTON_MODULE_NEST_PROVIDER);
   app.useLogger(logger);
   app.useGlobalInterceptors(new LoggingInterceptor(app.get('winston')));
 
@@ -46,4 +46,4 @@ async function bootstrap() {
   console.log(`Health:  http://localhost:${process.env.PORT ?? 4000}/health`);
 }
 
-bootstrap();
+void bootstrap();

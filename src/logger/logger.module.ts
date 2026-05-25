@@ -1,8 +1,5 @@
 import { Module, Global } from '@nestjs/common';
-import {
-  WinstonModule,
-  utilities as nestWinstonModuleUtilities,
-} from 'nest-winston';
+import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 
 @Global()

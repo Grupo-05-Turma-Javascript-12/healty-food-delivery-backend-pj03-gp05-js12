@@ -31,17 +31,13 @@ export class Produto {
   @Column({ default: true })
   em_estoque: boolean;
 
-  @ApiProperty({
-    example: { id: 1 },
-  })
+  @ApiProperty({ type: () => Categoria })
   @ManyToOne(() => Categoria, (categoria) => categoria.produtos, {
     onDelete: 'SET NULL',
   })
   categoria: Categoria;
 
-  @ApiProperty({
-    example: { id: 1 },
-  })
+  @ApiProperty({ type: () => Usuario })
   @ManyToOne(() => Usuario, (usuario) => usuario.produtos, {
     onDelete: 'CASCADE',
   })

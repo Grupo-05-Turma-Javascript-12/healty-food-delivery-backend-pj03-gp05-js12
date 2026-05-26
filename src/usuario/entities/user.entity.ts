@@ -45,7 +45,7 @@ export class Usuario {
   @ApiProperty()
   dataCadastro: Date;
 
+  @ApiProperty({ type: () => [Produto] })
   @OneToMany(() => Produto, (produto) => produto.usuario)
-  @ApiProperty({ type: () => Produto, isArray: true })
   produtos: Produto[];
 }

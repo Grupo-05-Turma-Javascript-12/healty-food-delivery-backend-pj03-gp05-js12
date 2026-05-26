@@ -54,12 +54,31 @@ export class ProdutoService {
   }
 
   async createProduct(produto: Produto): Promise<Produto> {
-    return this.produtoRepository.save(produto);
+    const novoProduto = this.produtoRepository.create(produto);
+
+    const salvo = await this.produtoRepository.save(novoProduto);
+
+    return this.produtoRepository.findOne({
+      where: { id: salvo.id },
+      relations: {
+        categoria: true,
+        usuario: true,
+      },
+    }) as Promise<Produto>;
   }
 
   async updateProduct(produto: Produto): Promise<Produto> {
     await this.getProductById(produto.id);
-    return await this.produtoRepository.save(produto);
+
+    const atualizado = await this.produtoRepository.save(produto);
+
+    return this.produtoRepository.findOne({
+      where: { id: atualizado.id },
+      relations: {
+        categoria: true,
+        usuario: true,
+      },
+    }) as Promise<Produto>;
   }
 
   async deleteProduct(id: number): Promise<void> {

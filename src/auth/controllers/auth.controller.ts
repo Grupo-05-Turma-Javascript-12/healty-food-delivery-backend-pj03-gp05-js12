@@ -1,13 +1,13 @@
 import {
-  Body,
   Controller,
   HttpCode,
   HttpStatus,
   Post,
+  Request,
   UseGuards,
 } from '@nestjs/common';
+
 import { ApiTags } from '@nestjs/swagger';
-import { UserLogin } from '../entities/userlogin.entity';
 import { LocalAuthGuard } from '../guard/local-auth.guard';
 import { AuthService } from '../services/auth.service';
 
@@ -19,7 +19,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Post('/login')
-  login(@Body() user: UserLogin): Promise<any> {
-    return this.authService.login(user);
+  login(@Request() req): Promise<any> {
+    return this.authService.login(req.user);
   }
 }

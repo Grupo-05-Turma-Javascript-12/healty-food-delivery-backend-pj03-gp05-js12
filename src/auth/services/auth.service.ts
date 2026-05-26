@@ -29,15 +29,14 @@ export class AuthService {
     return null;
   }
 
-  async login(userLogin: UserLogin) {
-    const payload = { sub: userLogin.usuario };
-    const user = await this.userService.findByUser(userLogin.usuario);
+  async login(user: any) {
+    const payload = { sub: user.usuario };
 
     return {
-      id: user?.id,
-      nome: user?.nome,
-      usuario: user?.usuario,
-      foto: user?.foto,
+      id: user.id,
+      nome: user.nome,
+      usuario: user.usuario,
+      foto: user.foto,
       token: `Bearer ${this.jwtService.sign(payload)}`,
     };
   }

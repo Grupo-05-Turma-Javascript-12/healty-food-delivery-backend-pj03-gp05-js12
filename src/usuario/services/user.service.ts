@@ -26,10 +26,10 @@ export class UsuarioService {
   }
 
   async findById(id: number): Promise<Usuario> {
-    const usuarioExistente = await this.usuarioRepository.findOne({ 
+    const usuarioExistente = await this.usuarioRepository.findOne({
       where: { id },
       relations: { produtos: true },
-     });
+    });
     if (!usuarioExistente) {
       throw new HttpException('Usuário não encontrado!', HttpStatus.NOT_FOUND);
     }

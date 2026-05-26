@@ -62,7 +62,6 @@ export class ProdutoService {
       where: { id: salvo.id },
       relations: {
         categoria: true,
-        usuario: true,
       },
     }) as Promise<Produto>;
   }
@@ -76,7 +75,6 @@ export class ProdutoService {
       where: { id: atualizado.id },
       relations: {
         categoria: true,
-        usuario: true,
       },
     }) as Promise<Produto>;
   }

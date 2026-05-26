@@ -4,10 +4,8 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Produto } from '../../produto/entities/produto.entity';
 
 @Entity({ name: 'tb_usuarios' })
 export class Usuario {
@@ -44,8 +42,4 @@ export class Usuario {
   })
   @ApiProperty()
   dataCadastro: Date;
-
-  @ApiProperty({ type: () => [Produto] })
-  @OneToMany(() => Produto, (produto) => produto.usuario)
-  produtos: Produto[];
 }

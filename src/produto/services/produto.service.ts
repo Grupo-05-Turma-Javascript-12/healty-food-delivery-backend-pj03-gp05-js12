@@ -1,3 +1,4 @@
+import { CategoriaService } from './../../categoria/services/categoria.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LessThanOrEqual, Repository } from 'typeorm';
@@ -8,6 +9,7 @@ export class ProdutoService {
   constructor(
     @InjectRepository(Produto)
     private readonly produtoRepository: Repository<Produto>,
+    private categoriaService: CategoriaService,
   ) {}
 
   async getAllProducts(): Promise<Produto[]> {
@@ -54,29 +56,14 @@ export class ProdutoService {
   }
 
   async createProduct(produto: Produto): Promise<Produto> {
-    const novoProduto = this.produtoRepository.create(produto);
-
-    const salvo = await this.produtoRepository.save(novoProduto);
-
-    return this.produtoRepository.findOne({
-      where: { id: salvo.id },
-      relations: {
-        categoria: true,
-      },
-    }) as Promise<Produto>;
+    await this.categoriaService.getCategoryById(produto.categoria.id);
+    return await this.produtoRepository.save(produto);
   }
 
   async updateProduct(produto: Produto): Promise<Produto> {
     await this.getProductById(produto.id);
-
-    const atualizado = await this.produtoRepository.save(produto);
-
-    return this.produtoRepository.findOne({
-      where: { id: atualizado.id },
-      relations: {
-        categoria: true,
-      },
-    }) as Promise<Produto>;
+    await this.categoriaService.getCategoryById(produto.categoria.id);
+    return await this.produtoRepository.save(produto);
   }
 
   async deleteProduct(id: number): Promise<void> {

@@ -22,7 +22,7 @@ export class Produto {
   @ApiProperty()
   @IsNotEmpty()
   @Column({ type: 'numeric', precision: 10, scale: 2, nullable: false })
-  preco: string;
+  preco: number;
 
   @ApiProperty()
   @IsBoolean()

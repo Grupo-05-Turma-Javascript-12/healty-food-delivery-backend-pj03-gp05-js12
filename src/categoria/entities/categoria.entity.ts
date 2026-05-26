@@ -18,6 +18,7 @@ export class Categoria {
   @ApiProperty()
   descricao: string;
 
+  @ApiProperty({ type: () => [Produto] })
   @OneToMany(() => Produto, (produto) => produto.categoria)
   produtos: Produto[];
 }

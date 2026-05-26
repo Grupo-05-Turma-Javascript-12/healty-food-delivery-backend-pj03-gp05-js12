@@ -1,52 +1,45 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber } from 'class-validator';
-import {
-  Column,
-  Entity,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  JoinColumn,
-} from 'typeorm';
+import { IsBoolean, IsNotEmpty, IsOptional } from 'class-validator';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { Categoria } from '../../categoria/entities/categoria.entity';
 import { Usuario } from '../../usuario/entities/user.entity';
 
 @Entity({ name: 'tb_produtos' })
 export class Produto {
-  @PrimaryGeneratedColumn()
   @ApiProperty()
+  @PrimaryGeneratedColumn()
   id: number;
 
-  @IsNotEmpty()
-  @Column({ length: 255 })
   @ApiProperty()
+  @IsNotEmpty()
+  @Column({ length: 255, nullable: false })
   nome: string;
 
-  @Column({ length: 500, nullable: true })
   @ApiProperty()
+  @IsOptional()
+  @Column({ length: 500, nullable: true })
   descricao: string;
 
-  @IsNumber()
-  @Column('decimal', { precision: 10, scale: 2 })
   @ApiProperty()
+  @IsNotEmpty()
+  @Column('decimal', { precision: 10, scale: 2, nullable: false })
   preco: number;
 
-  @Column({ default: true })
   @ApiProperty()
+  @IsBoolean()
+  @Column({ default: true })
   em_estoque: boolean;
 
+  @ApiProperty({ type: () => Categoria })
   @ManyToOne(() => Categoria, (categoria) => categoria.produtos, {
-    eager: true,
-    nullable: true,
     onDelete: 'SET NULL',
   })
-  @JoinColumn({ name: 'categoria_id' })
   categoria: Categoria;
 
-  @ManyToOne(() => Usuario, {
-    eager: true,
+  @ApiProperty({ type: () => Usuario })
+  @ManyToOne(() => Usuario, (usuario) => usuario.produtos, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'usuario_id' })
   usuario: Usuario;
 }

@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
   ValidateNested,
 } from 'class-validator';
@@ -29,7 +28,7 @@ export class Produto {
   descricao: string;
 
   @ApiProperty()
-  @IsNumber()
+  @IsNotEmpty()
   @Column('decimal', { precision: 10, scale: 2, nullable: false })
   preco: number;
 

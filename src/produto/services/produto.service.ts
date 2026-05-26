@@ -55,26 +55,28 @@ export class ProdutoService {
     return produtos;
   }
 
-  async createProduct(produto: Produto): Promise<Produto> {
-    const categoria = await this.categoriaService.getCategoryById(
-      produto.categoria.id,
-    );
+  async createProduct(produto: Produto, categoriaId: number): Promise<Produto> {
+    const categoria = await this.categoriaService.getCategoryById(categoriaId);
 
-    produto.categoria = categoria;
+    const newProduct = this.produtoRepository.create({
+      ...produto,
+      categoria,
+    });
 
-    return await this.produtoRepository.save(produto);
+    return this.produtoRepository.save(newProduct);
   }
 
-  async updateProduct(produto: Produto): Promise<Produto> {
+  async updateProduct(produto: Produto, categoriaId: number): Promise<Produto> {
     await this.getProductById(produto.id);
 
-    const categoria = await this.categoriaService.getCategoryById(
-      produto.categoria.id,
-    );
+    const categoria = await this.categoriaService.getCategoryById(categoriaId);
 
-    produto.categoria = categoria;
+    const updatedProduct = {
+      ...produto,
+      categoria,
+    };
 
-    return await this.produtoRepository.save(produto);
+    return this.produtoRepository.save(updatedProduct);
   }
 
   async deleteProduct(id: number): Promise<void> {

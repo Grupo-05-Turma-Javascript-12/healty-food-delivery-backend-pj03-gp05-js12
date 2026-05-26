@@ -56,13 +56,24 @@ export class ProdutoService {
   }
 
   async createProduct(produto: Produto): Promise<Produto> {
-    await this.categoriaService.getCategoryById(produto.categoria.id);
+    const categoria = await this.categoriaService.getCategoryById(
+      produto.categoria.id,
+    );
+
+    produto.categoria = categoria;
+
     return await this.produtoRepository.save(produto);
   }
 
   async updateProduct(produto: Produto): Promise<Produto> {
     await this.getProductById(produto.id);
-    await this.categoriaService.getCategoryById(produto.categoria.id);
+
+    const categoria = await this.categoriaService.getCategoryById(
+      produto.categoria.id,
+    );
+
+    produto.categoria = categoria;
+
     return await this.produtoRepository.save(produto);
   }
 

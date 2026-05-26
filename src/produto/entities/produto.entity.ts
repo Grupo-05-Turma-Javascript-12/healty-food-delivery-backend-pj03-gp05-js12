@@ -29,7 +29,7 @@ export class Produto {
   @Column({ default: true })
   em_estoque: boolean;
 
-  @ApiProperty()
+  @ApiProperty({ type: () => Categoria })
   @ManyToOne(() => Categoria, (categoria) => categoria.produtos, {
     onDelete: 'SET NULL',
   })

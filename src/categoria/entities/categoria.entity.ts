@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Produto } from '../../produto/entities/produto.entity';
 
 @Entity({ name: 'tb_categorias' })
@@ -19,6 +19,6 @@ export class Categoria {
   descricao: string;
 
   @ApiProperty()
-  @ManyToOne(() => Produto, (produto) => produto.categoria)
+  @OneToMany(() => Produto, (produto) => produto.categoria)
   produtos: Produto[];
 }

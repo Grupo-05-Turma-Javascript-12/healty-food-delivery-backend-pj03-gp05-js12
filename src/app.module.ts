@@ -24,6 +24,7 @@ import { LoggerModule } from './logger/logger.module';
         database: configService.get<string>('DATABASE_NAME'),
         entities: [Usuario, Categoria, Produto],
         synchronize: true,
+        dropSchema: true,
         ssl:
           process.env.NODE_ENV === 'production'
             ? { rejectUnauthorized: false }

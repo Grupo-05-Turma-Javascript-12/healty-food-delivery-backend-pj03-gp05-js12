@@ -1,11 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsBoolean,
-  IsNotEmpty,
-  IsOptional,
-  ValidateNested,
-} from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsBoolean, IsNotEmpty, IsOptional } from 'class-validator';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { Categoria } from '../../categoria/entities/categoria.entity';
@@ -37,19 +31,17 @@ export class Produto {
   @Column({ default: true })
   em_estoque: boolean;
 
-  @ApiProperty({ type: () => Categoria })
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => Categoria)
+  @ApiProperty({
+    example: { id: 1 },
+  })
   @ManyToOne(() => Categoria, (categoria) => categoria.produtos, {
     onDelete: 'SET NULL',
   })
   categoria: Categoria;
 
-  @ApiProperty({ type: () => Usuario })
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => Usuario)
+  @ApiProperty({
+    example: { id: 1 },
+  })
   @ManyToOne(() => Usuario, (usuario) => usuario.produtos, {
     onDelete: 'CASCADE',
   })

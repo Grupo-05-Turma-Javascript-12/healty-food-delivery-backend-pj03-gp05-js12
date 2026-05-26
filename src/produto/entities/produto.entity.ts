@@ -36,10 +36,4 @@ export class Produto {
     onDelete: 'SET NULL',
   })
   categoria: Categoria;
-
-  @ApiProperty()
-  @ManyToOne(() => Usuario, (usuario) => usuario.produtos, {
-    onDelete: 'CASCADE',
-  })
-  usuario: Usuario;
 }
